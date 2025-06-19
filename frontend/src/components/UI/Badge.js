@@ -1,4 +1,3 @@
-
 import React from 'react';
 
 /**
@@ -12,29 +11,13 @@ const Badge = ({
   className = '',
   ...props
 }) => {
-  // Base styles
-  const baseStyles = 'inline-flex items-center font-medium rounded-full';
-
-  // Variant styles
-  const variantStyles = {
-    default: 'bg-gray-100 text-gray-800',
-    primary: 'bg-blue-100 text-blue-800',
-    success: 'bg-green-100 text-green-800',
-    warning: 'bg-yellow-100 text-yellow-800',
-    danger: 'bg-red-100 text-red-800',
-    info: 'bg-indigo-100 text-indigo-800',
-    high: 'bg-red-100 text-red-800',
-    medium: 'bg-orange-100 text-orange-800',
-    low: 'bg-yellow-100 text-yellow-800',
-    none: 'bg-gray-100 text-gray-600'
-  };
-
-  // Size styles
-  const sizeStyles = {
-    small: 'px-2 py-0.5 text-xs',
-    medium: 'px-2.5 py-1 text-sm',
-    large: 'px-3 py-1.5 text-base'
-  };
+  // Combine classes
+  const badgeClasses = [
+    'badge',
+    variant ? `badge-${variant}` : '',
+    size !== 'medium' ? `badge-${size}` : '',
+    className
+  ].filter(Boolean).join(' ');
 
   // Custom color override
   const customColorStyles = color ? {
@@ -42,17 +25,9 @@ const Badge = ({
     color: color
   } : {};
 
-  // Combine styles
-  const badgeStyles = `
-    ${baseStyles}
-    ${color ? '' : variantStyles[variant]}
-    ${sizeStyles[size]}
-    ${className}
-  `.trim().replace(/\s+/g, ' ');
-
   return (
     <span
-      className={badgeStyles}
+      className={badgeClasses}
       style={customColorStyles}
       {...props}
     >

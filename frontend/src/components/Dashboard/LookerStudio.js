@@ -31,15 +31,15 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
   };
 
   return (
-    <div className={`relative card ${className}`}>
+    <div className={`looker-studio-container card ${className}`}>
       {/* Header */}
-      <div className="border-b border-gray-200 px-6 py-4">
-        <div className="flex items-center justify-between">
+      <div className="looker-studio-header">
+        <div className="looker-studio-header-content">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="looker-studio-title">
               Analytics Overview
             </h2>
-            <p className="text-sm text-gray-600 mt-1">
+            <p className="looker-studio-subtitle">
               Real-time insights from Looker Studio dashboard
             </p>
           </div>
@@ -50,7 +50,7 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
             className="btn btn-outline btn-small"
           >
             <svg 
-              className="h-4 w-4 mr-2" 
+              className="refresh-icon" 
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -68,19 +68,19 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
       </div>
 
       {/* Content */}
-      <div className="relative" style={{ height }}>
+      <div className="looker-studio-content" style={{ height }}>
         {/* Loading state */}
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50" style={{ borderRadius: '0 0 0.5rem 0.5rem' }}>
-            <div className="flex flex-col items-center space-y-4">
+          <div className="looker-studio-loading">
+            <div className="looker-studio-loading-content">
               <svg
-                className="animate-spin h-12 w-12 text-blue-600"
+                className="looker-studio-spinner"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
               >
                 <circle
-                  className="opacity-25"
+                  className="spinner-track"
                   cx="12"
                   cy="12"
                   r="10"
@@ -88,12 +88,12 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
                   strokeWidth="4"
                 />
                 <path
-                  className="opacity-75"
+                  className="spinner-fill"
                   fill="currentColor"
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 />
               </svg>
-              <p className="text-gray-600 text-sm font-medium">
+              <p className="looker-studio-loading-text">
                 Loading Looker Studio dashboard...
               </p>
             </div>
@@ -102,9 +102,9 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
 
         {/* Error state */}
         {hasError && (
-          <div className="absolute inset-0 flex items-center justify-center bg-gray-50" style={{ borderRadius: '0 0 0.5rem 0.5rem' }}>
-            <div className="text-center">
-              <div className="mx-auto h-12 w-12 text-gray-400 mb-4">
+          <div className="looker-studio-error">
+            <div className="looker-studio-error-content">
+              <div className="looker-studio-error-icon">
                 <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path 
                     strokeLinecap="round" 
@@ -114,10 +114,10 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
                   />
                 </svg>
               </div>
-              <h3 className="text-sm font-medium text-gray-900 mb-2">
+              <h3 className="looker-studio-error-title">
                 Dashboard Unavailable
               </h3>
-              <p className="text-sm text-gray-500 mb-4">
+              <p className="looker-studio-error-description">
                 Unable to load the Looker Studio dashboard.
               </p>
               <button
@@ -137,10 +137,7 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
           width="100%"
           height="100%"
           frameBorder="0"
-          style={{ 
-            border: 0,
-            borderRadius: '0 0 0.5rem 0.5rem'
-          }}
+          className="looker-studio-iframe"
           allowFullScreen
           sandbox="allow-storage-access-by-user-activation allow-scripts allow-same-origin allow-popups allow-popups-to-escape-sandbox"
           onLoad={handleLoad}
@@ -150,8 +147,8 @@ const LookerStudio = ({ className = '', height = '600px' }) => {
       </div>
 
       {/* Footer info */}
-      <div className="border-t border-gray-200 px-6 py-3 bg-gray-50" style={{ borderRadius: '0 0 0.5rem 0.5rem' }}>
-        <p className="text-xs text-gray-500">
+      <div className="looker-studio-footer">
+        <p className="looker-studio-footer-text">
           Powered by Google Looker Studio • Data updates in real-time
         </p>
       </div>

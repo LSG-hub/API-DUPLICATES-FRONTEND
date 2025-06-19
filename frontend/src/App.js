@@ -10,35 +10,35 @@ import './styles/main.css';
  */
 function App() {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="app-container">
       {/* Header */}
       <Header title="Duplicate APIs Detection" />
       
       {/* Main layout */}
-      <div className="flex">
+      <div className="app-layout">
         {/* Sidebar */}
         <Sidebar />
         
         {/* Main content */}
-        <main className="flex-1 p-6 overflow-auto">
-          <div className="max-w-7xl mx-auto space-y-6">
+        <main className="app-main">
+          <div className="app-content">
             {/* Page header */}
-            <div className="mb-8">
-              <h1 className="text-2xl font-bold text-gray-900">
+            <div className="page-header">
+              <h1 className="page-title">
                 Duplicate APIs Detection
               </h1>
-              <p className="text-gray-600 mt-2">
+              <p className="page-description">
                 Identify and manage duplicate APIs across your estate
               </p>
             </div>
 
             {/* First half: Looker Studio Dashboard */}
-            <div className="mb-8">
+            <div className="dashboard-section">
               <LookerStudio height="600px" />
             </div>
 
             {/* Second half: API Duplicates List */}
-            <div>
+            <div className="duplicates-section">
               <DuplicatesList />
             </div>
           </div>

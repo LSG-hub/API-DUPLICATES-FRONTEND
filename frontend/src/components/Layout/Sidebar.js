@@ -68,27 +68,21 @@ const Sidebar = ({ className = '' }) => {
 
   const renderMenuItem = (item, level = 0) => {
     const hasChildren = item.children && item.children.length > 0;
-    const paddingLeft = level === 0 ? '0.75rem' : '2rem';
+    const itemClasses = [
+      'sidebar-menu-item',
+      item.active ? 'sidebar-menu-item-active' : '',
+      level > 0 ? 'sidebar-menu-item-child' : ''
+    ].filter(Boolean).join(' ');
 
     return (
       <div key={item.id}>
         <a
           href="#"
-          className={`
-            flex items-center pr-3 py-2 text-sm font-medium rounded-md transition-colors
-            ${item.active 
-              ? 'bg-blue-100 text-blue-700' 
-              : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
-            }
-          `}
-          style={{ paddingLeft }}
+          className={itemClasses}
         >
           {item.icon && (
             <svg 
-              className={`
-                h-5 w-5 mr-3
-                ${item.active ? 'text-blue-600' : 'text-gray-400'}
-              `}
+              className={`sidebar-menu-icon ${item.active ? 'sidebar-menu-icon-active' : ''}`}
               fill="none" 
               stroke="currentColor" 
               viewBox="0 0 24 24"
@@ -99,16 +93,16 @@ const Sidebar = ({ className = '' }) => {
           
           {!isCollapsed && (
             <>
-              <span className="flex-1">{item.label}</span>
+              <span className="sidebar-menu-label">{item.label}</span>
               
               {item.count !== null && (
-                <span className={`badge ${item.active ? 'badge-primary' : ''}`}>
+                <span className={`badge ${item.active ? 'badge-primary' : 'badge-default'}`}>
                   {item.count}
                 </span>
               )}
               
               {hasChildren && (
-                <svg className="ml-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg className="sidebar-menu-arrow" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                 </svg>
               )}
@@ -118,7 +112,7 @@ const Sidebar = ({ className = '' }) => {
 
         {/* Render children if expanded */}
         {hasChildren && !isCollapsed && (
-          <div className="mt-1 space-y-1">
+          <div className="sidebar-submenu">
             {item.children.map(child => renderMenuItem(child, level + 1))}
           </div>
         )}
@@ -126,29 +120,35 @@ const Sidebar = ({ className = '' }) => {
     );
   };
 
+  const sidebarClasses = [
+    'sidebar',
+    isCollapsed ? 'sidebar-collapsed' : 'sidebar-expanded',
+    className
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className={`bg-white border-r border-gray-200 flex flex-col transition-all ${isCollapsed ? 'w-16' : 'w-64'} ${className}`} style={{ transitionDuration: '300ms' }}>
+    <div className={sidebarClasses}>
       {/* Sidebar header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200">
+      <div className="sidebar-header">
         {!isCollapsed && (
-          <div className="flex items-center space-x-2">
-            <svg className="h-6 w-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="sidebar-brand">
+            <svg className="sidebar-brand-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
             </svg>
-            <span className="text-lg font-semibold text-gray-900">API Hub</span>
+            <span className="sidebar-brand-text">API Hub</span>
           </div>
         )}
         
         <button
           onClick={() => setIsCollapsed(!isCollapsed)}
-          className="p-1 rounded-md hover:bg-gray-100 transition-colors"
+          className="sidebar-toggle"
         >
           {isCollapsed ? (
-            <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="sidebar-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
             </svg>
           ) : (
-            <svg className="h-5 w-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="sidebar-toggle-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
             </svg>
           )}
@@ -156,32 +156,30 @@ const Sidebar = ({ className = '' }) => {
       </div>
 
       {/* Main navigation */}
-      <nav className="flex-1 overflow-y-auto p-3 space-y-1">
+      <nav className="sidebar-nav">
         {menuItems.map(item => renderMenuItem(item))}
       </nav>
 
       {/* Bottom navigation */}
-      <div className="border-t border-gray-200 p-3 space-y-1">
+      <div className="sidebar-footer-nav">
         {bottomMenuItems.map(item => renderMenuItem(item))}
       </div>
 
       {/* AI Enhancement Badge */}
       {!isCollapsed && (
-        <div className="p-3 border-t border-gray-200">
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-            <div className="flex items-center space-x-2">
-              <div className="h-8 w-8 bg-blue-600 rounded-full flex items-center justify-center">
-                <svg className="h-4 w-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
+        <div className="sidebar-ai-badge">
+          <div className="ai-badge-content">
+            <div className="ai-badge-icon">
+              <svg className="ai-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+              </svg>
+            </div>
+            <div>
+              <div className="ai-badge-title">
+                AI Enhanced
               </div>
-              <div>
-                <div className="text-sm font-medium text-blue-900">
-                  AI Enhanced
-                </div>
-                <div className="text-xs text-blue-600">
-                  Powered by Gemini AI
-                </div>
+              <div className="ai-badge-subtitle">
+                Powered by Gemini AI
               </div>
             </div>
           </div>

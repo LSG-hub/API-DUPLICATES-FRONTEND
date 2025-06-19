@@ -31,36 +31,34 @@ const CategoryTabs = ({
   };
 
   return (
-    <div className={`border-b border-gray-200 ${className}`}>
-      <nav className="-mb-px flex space-x-1 overflow-x-auto" aria-label="Category filter">
+    <div className={`category-tabs-container ${className}`}>
+      <nav className="category-tabs-nav" aria-label="Category filter">
         {sortedCategories.map((category) => {
           const isActive = activeCategory === category;
           const count = getCategoryCount(category);
           const color = getCategoryColor(category);
           
+          const tabClasses = [
+            'category-tab',
+            isActive ? 'category-tab-active' : ''
+          ].filter(Boolean).join(' ');
+          
           return (
             <button
               key={category}
               onClick={() => onCategoryChange?.(category)}
-              className={`
-                group relative min-w-0 flex-1 overflow-hidden py-3 px-4 text-sm font-medium text-center
-                hover:text-gray-700 focus:z-10 focus:outline-none transition-colors duration-200
-                ${isActive 
-                  ? 'text-blue-600 border-b-2 border-blue-600' 
-                  : 'text-gray-500 hover:text-gray-700 border-b-2 border-transparent hover:border-gray-300'
-                }
-              `}
+              className={tabClasses}
               aria-current={isActive ? 'page' : undefined}
             >
-              <div className="flex items-center justify-center space-x-2">
+              <div className="category-tab-content">
                 {/* Category color indicator */}
                 <div 
-                  className="w-3 h-3 rounded-full"
+                  className="category-color-indicator"
                   style={{ backgroundColor: color }}
                 />
                 
                 {/* Category name */}
-                <span className="truncate">
+                <span className="category-name">
                   {category}
                 </span>
                 
@@ -78,7 +76,7 @@ const CategoryTabs = ({
               {/* Active indicator line */}
               {isActive && (
                 <div 
-                  className="absolute bottom-0 left-0 right-0 h-0.5"
+                  className="category-active-indicator"
                   style={{ backgroundColor: color }}
                 />
               )}
@@ -103,12 +101,12 @@ export const CategoryFilter = ({
   className = ''
 }) => {
   return (
-    <div className={`bg-white border border-gray-200 rounded-lg ${className}`}>
+    <div className={`category-filter card ${className}`}>
       {/* Search bar */}
-      <div className="p-4 border-b border-gray-200">
-        <div className="relative">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <div className="category-filter-search">
+        <div className="search-container">
+          <div className="search-icon">
+            <svg className="search-icon-svg" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
             </svg>
           </div>
@@ -117,7 +115,7 @@ export const CategoryFilter = ({
             value={searchTerm}
             onChange={(e) => onSearchChange?.(e.target.value)}
             placeholder="Search duplicate APIs..."
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-sm"
+            className="search-input"
           />
         </div>
       </div>
@@ -131,20 +129,20 @@ export const CategoryFilter = ({
       />
 
       {/* Filter summary */}
-      <div className="px-4 py-3 bg-gray-50 border-t border-gray-200">
-        <div className="flex items-center justify-between text-sm">
-          <div className="text-gray-600">
+      <div className="category-filter-summary">
+        <div className="filter-summary-content">
+          <div className="filter-summary-text">
             {activeCategory === 'All Categories' ? (
               <>Showing all categories</>
             ) : (
-              <>Filtered by: <span className="font-medium text-gray-900">{activeCategory}</span></>
+              <>Filtered by: <span className="filter-summary-highlight">{activeCategory}</span></>
             )}
             {searchTerm && (
-              <> • Search: <span className="font-medium text-gray-900">"{searchTerm}"</span></>
+              <> • Search: <span className="filter-summary-highlight">"{searchTerm}"</span></>
             )}
           </div>
           
-          <div className="text-gray-500">
+          <div className="filter-summary-count">
             {categoryStats[activeCategory] || Object.values(categoryStats).reduce((sum, count) => sum + count, 0)} 
             {' '}duplicate pairs
           </div>

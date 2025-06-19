@@ -25,29 +25,36 @@ const SimilarityGroup = ({
 
   // Get priority level based on score
   const getPriorityLevel = (score) => {
-    if (score >= 95) return { level: 'HIGH', color: 'danger', bgColor: 'bg-red-50', borderColor: 'border-red-200' };
-    if (score >= 85) return { level: 'MEDIUM', color: 'warning', bgColor: 'bg-orange-50', borderColor: 'border-orange-200' };
-    if (score >= 50) return { level: 'LOW', color: 'info', bgColor: 'bg-yellow-50', borderColor: 'border-yellow-200' };
-    return { level: 'NONE', color: 'default', bgColor: 'bg-gray-50', borderColor: 'border-gray-200' };
+    if (score >= 95) return { level: 'HIGH', variant: 'danger', bgClass: 'similarity-group-high', borderClass: 'similarity-group-border-high' };
+    if (score >= 85) return { level: 'MEDIUM', variant: 'warning', bgClass: 'similarity-group-medium', borderClass: 'similarity-group-border-medium' };
+    if (score >= 50) return { level: 'LOW', variant: 'info', bgClass: 'similarity-group-low', borderClass: 'similarity-group-border-low' };
+    return { level: 'NONE', variant: 'default', bgClass: 'similarity-group-none', borderClass: 'similarity-group-border-none' };
   };
 
   const priority = getPriorityLevel(similarity_score_percentage);
   const pairCount = pairs.length;
   const apiCount = number_of_apis || (pairCount * 2); // Fallback calculation
 
+  const groupClasses = [
+    'similarity-group',
+    priority.bgClass,
+    priority.borderClass,
+    className
+  ].filter(Boolean).join(' ');
+
   return (
-    <div className={`${priority.bgColor} ${priority.borderColor} border rounded-lg ${className}`}>
+    <div className={groupClasses}>
       {/* Group header */}
       <div 
-        className="p-4 cursor-pointer hover:bg-opacity-80 transition-colors"
+        className="similarity-group-header"
         onClick={() => setIsExpanded(!isExpanded)}
       >
-        <div className="flex items-center justify-between">
-          <div className="flex items-center space-x-3">
+        <div className="similarity-group-header-content">
+          <div className="similarity-group-header-left">
             {/* Expand/collapse icon */}
-            <button className="p-1 hover:bg-white hover:bg-opacity-50 rounded">
+            <button className="similarity-group-toggle">
               <svg 
-                className={`h-5 w-5 text-gray-600 transform transition-transform ${isExpanded ? 'rotate-90' : ''}`}
+                className={`similarity-group-toggle-icon ${isExpanded ? 'similarity-group-toggle-expanded' : ''}`}
                 fill="none" 
                 stroke="currentColor" 
                 viewBox="0 0 24 24"
@@ -58,18 +65,18 @@ const SimilarityGroup = ({
 
             {/* Group title */}
             <div>
-              <h3 className="text-lg font-semibold text-gray-900">
+              <h3 className="similarity-group-title">
                 {similarity_score_percentage}% Match
               </h3>
-              <p className="text-sm text-gray-600">
+              <p className="similarity-group-subtitle">
                 {pairCount} API pair{pairCount !== 1 ? 's' : ''} • {apiCount} total APIs
               </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="similarity-group-header-right">
             {/* Priority badge */}
-            <Badge variant={priority.color}>
+            <Badge variant={priority.variant}>
               {priority.level} Priority
             </Badge>
 
@@ -91,21 +98,21 @@ const SimilarityGroup = ({
 
         {/* Quick stats */}
         {isExpanded && (
-          <div className="mt-3 pt-3 border-t border-current border-opacity-20">
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm">
+          <div className="similarity-group-stats">
+            <div className="similarity-group-stats-grid">
               <div>
-                <span className="text-gray-600">Similarity Level:</span>
-                <span className="ml-2 font-medium text-gray-900">
+                <span className="similarity-group-stats-label">Similarity Level:</span>
+                <span className="similarity-group-stats-value">
                   {priority.level} ({similarity_score_percentage}%)
                 </span>
               </div>
               <div>
-                <span className="text-gray-600">API Pairs:</span>
-                <span className="ml-2 font-medium text-gray-900">{pairCount}</span>
+                <span className="similarity-group-stats-label">API Pairs:</span>
+                <span className="similarity-group-stats-value">{pairCount}</span>
               </div>
               <div>
-                <span className="text-gray-600">Total APIs:</span>
-                <span className="ml-2 font-medium text-gray-900">{apiCount}</span>
+                <span className="similarity-group-stats-label">Total APIs:</span>
+                <span className="similarity-group-stats-value">{apiCount}</span>
               </div>
             </div>
           </div>
@@ -114,21 +121,21 @@ const SimilarityGroup = ({
 
       {/* Group content */}
       {isExpanded && (
-        <div className="border-t border-current border-opacity-20">
-          <div className="p-4">
+        <div className="similarity-group-content">
+          <div className="similarity-group-content-inner">
             {/* Bulk actions for high priority groups */}
             {priority.level === 'HIGH' && (
-              <div className="mb-4 p-3 bg-white bg-opacity-60 rounded-lg">
-                <div className="flex items-center justify-between">
+              <div className="similarity-group-bulk-actions">
+                <div className="similarity-group-bulk-actions-content">
                   <div>
-                    <h4 className="text-sm font-medium text-gray-900">
+                    <h4 className="similarity-group-bulk-title">
                       High Priority Duplicates Detected
                     </h4>
-                    <p className="text-xs text-gray-600 mt-1">
+                    <p className="similarity-group-bulk-subtitle">
                       These APIs have very high similarity. Consider immediate action.
                     </p>
                   </div>
-                  <div className="flex items-center space-x-2">
+                  <div className="similarity-group-bulk-buttons">
                     <Button 
                       size="small"
                       variant="outline"
@@ -149,7 +156,7 @@ const SimilarityGroup = ({
             )}
 
             {/* API pairs grid */}
-            <div className="space-y-4">
+            <div className="similarity-group-pairs">
               {pairs.map((pair, index) => (
                 <ApiPairCard
                   key={`${pair.source?.contract_id}-${pair.destination?.contract_id}-${index}`}
@@ -162,7 +169,7 @@ const SimilarityGroup = ({
 
             {/* Load more if there are many pairs */}
             {pairs.length > 5 && (
-              <div className="mt-4 text-center">
+              <div className="similarity-group-load-more">
                 <Button 
                   variant="outline"
                   size="small"
@@ -193,14 +200,14 @@ export const SimilarityGroupsList = ({
 }) => {
   if (!groups || groups.length === 0) {
     return (
-      <div className="text-center py-12">
-        <div className="mx-auto h-12 w-12 text-gray-400">
+      <div className="similarity-groups-empty">
+        <div className="similarity-groups-empty-icon">
           <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
           </svg>
         </div>
-        <h3 className="mt-2 text-sm font-medium text-gray-900">No duplicate groups found</h3>
-        <p className="mt-1 text-sm text-gray-500">
+        <h3 className="similarity-groups-empty-title">No duplicate groups found</h3>
+        <p className="similarity-groups-empty-description">
           No APIs with significant similarity were detected.
         </p>
       </div>
@@ -213,7 +220,7 @@ export const SimilarityGroupsList = ({
   );
 
   return (
-    <div className={`space-y-4 ${className}`}>
+    <div className={`similarity-groups-list ${className}`}>
       {sortedGroups.map((group, index) => (
         <SimilarityGroup
           key={`group-${group.similarity_score_percentage}-${index}`}

@@ -11,40 +11,24 @@ const LoadingSpinner = ({
   className = '',
   ...props
 }) => {
-  // Size styles
-  const sizeStyles = {
-    small: 'h-4 w-4',
-    medium: 'h-8 w-8',
-    large: 'h-12 w-12',
-    xlarge: 'h-16 w-16'
-  };
-
-  // Color styles
-  const colorStyles = {
-    blue: 'text-blue-600',
-    gray: 'text-gray-600',
-    white: 'text-white',
-    green: 'text-green-600',
-    red: 'text-red-600'
-  };
-
-  const spinnerStyles = `
-    animate-spin
-    ${sizeStyles[size]}
-    ${colorStyles[color]}
-    ${className}
-  `.trim().replace(/\s+/g, ' ');
+  // Combine classes
+  const spinnerClasses = [
+    'spinner',
+    `spinner-${size}`,
+    `spinner-${color}`,
+    className
+  ].filter(Boolean).join(' ');
 
   const Spinner = () => (
     <svg
-      className={spinnerStyles}
+      className={spinnerClasses}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
       {...props}
     >
       <circle
-        className="opacity-25"
+        className="spinner-track"
         cx="12"
         cy="12"
         r="10"
@@ -52,7 +36,7 @@ const LoadingSpinner = ({
         strokeWidth="4"
       />
       <path
-        className="opacity-75"
+        className="spinner-fill"
         fill="currentColor"
         d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
       />
@@ -61,11 +45,11 @@ const LoadingSpinner = ({
 
   if (overlay) {
     return (
-      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-        <div className="bg-white rounded-lg p-6 flex flex-col items-center space-y-4">
+      <div className="spinner-overlay">
+        <div className="spinner-overlay-content">
           <Spinner />
           {message && (
-            <p className="text-gray-700 text-center font-medium">
+            <p className="spinner-message">
               {message}
             </p>
           )}
@@ -76,9 +60,9 @@ const LoadingSpinner = ({
 
   if (message) {
     return (
-      <div className="flex flex-col items-center space-y-2">
+      <div className="spinner-with-message">
         <Spinner />
-        <p className="text-gray-600 text-sm font-medium">
+        <p className="spinner-message-inline">
           {message}
         </p>
       </div>
@@ -94,7 +78,7 @@ const LoadingSpinner = ({
 export const InlineSpinner = ({ className = '', ...props }) => (
   <LoadingSpinner 
     size="small" 
-    className={`inline ${className}`} 
+    className={`spinner-inline ${className}`} 
     {...props} 
   />
 );
@@ -115,7 +99,7 @@ export const FullPageLoader = ({ message = 'Loading...', ...props }) => (
  * Card loading placeholder
  */
 export const CardLoader = ({ className = '', ...props }) => (
-  <div className={`flex items-center justify-center p-8 ${className}`}>
+  <div className={`spinner-card ${className}`}>
     <LoadingSpinner size="medium" message="Loading..." {...props} />
   </div>
 );
