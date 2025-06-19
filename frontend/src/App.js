@@ -3,10 +3,10 @@ import Header from './components/Layout/Header';
 import Sidebar from './components/Layout/Sidebar';
 import LookerStudio from './components/Dashboard/LookerStudio';
 import DuplicatesList from './components/Dashboard/DuplicatesList';
-import './styles/globals.css';
+import './styles/main.css';
 
 /**
- * Main App component
+ * Main App component - Keep the same modular structure
  */
 function App() {
   return (

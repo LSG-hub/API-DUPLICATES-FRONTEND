@@ -1,11 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { CategoryFilter } from './CategoryTabs';
-import { SimilarityGroupsList } from './SimilarityGroup';
 import Button from '../UI/Button';
-import Badge from '../UI/Badge';
-import LoadingSpinner from '../UI/LoadingSpinner';
 import { useApiDuplicates } from '../../hooks/useApiDuplicates';
-import { Play, RefreshCw, Download, Settings } from 'lucide-react';
 
 /**
  * DuplicatesList component - the main component for displaying API duplicates
@@ -17,7 +12,6 @@ const DuplicatesList = ({ className = '' }) => {
     error,
     lastScanTime,
     statistics,
-    categoryBreakdown,
     hasData,
     categories,
     scanDuplicates,
@@ -69,41 +63,38 @@ const DuplicatesList = ({ className = '' }) => {
   // Handle API detail viewing
   const handleViewDetails = (api, explanationText) => {
     console.log('View details for API:', api);
-    // TODO: Implement modal or detail view
     alert(`API Details:\n\nName: ${api.name}\nDescription: ${api.description}\n\nSimilarity Explanation:\n${explanationText}`);
   };
 
   // Handle taking action on duplicates
   const handleTakeAction = (target, actionType) => {
     console.log('Take action:', actionType, 'on:', target);
-    // TODO: Implement action handling (mark duplicate, false positive, etc.)
     alert(`Action: ${actionType}\nTarget: ${target.similarity_score_percentage || 'group'}`);
   };
 
   // Handle export
   const handleExport = () => {
     console.log('Export duplicates data');
-    // TODO: Implement export functionality
     alert('Export functionality to be implemented');
   };
 
   if (error) {
     return (
-      <div className={`bg-white rounded-lg shadow-sm border ${className}`}>
+      <div className={`card ${className}`}>
         <div className="p-6">
           <div className="text-center">
-            <div className="mx-auto h-12 w-12 text-red-400">
+            <div className="mx-auto h-12 w-12 text-red-400 mb-4">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
             </div>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <h3 className="text-sm font-medium text-gray-900 mb-2">
               Failed to Load Duplicates
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mb-4">
               {error}
             </p>
-            <div className="mt-4 flex items-center justify-center space-x-2">
+            <div className="flex items-center justify-center space-x-2">
               <Button
                 variant="outline"
                 size="small"
@@ -127,7 +118,7 @@ const DuplicatesList = ({ className = '' }) => {
   }
 
   return (
-    <div className={`bg-white rounded-lg shadow-sm border ${className}`}>
+    <div className={`card ${className}`}>
       {/* Header */}
       <div className="border-b border-gray-200 px-6 py-4">
         <div className="flex items-center justify-between">
@@ -145,7 +136,12 @@ const DuplicatesList = ({ className = '' }) => {
             <Button
               variant="outline"
               size="small"
-              icon={<Settings className="h-4 w-4" />}
+              icon={
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              }
             >
               AI Affinity Settings
             </Button>
@@ -156,7 +152,11 @@ const DuplicatesList = ({ className = '' }) => {
               size="medium"
               loading={loading}
               onClick={scanDuplicates}
-              icon={<Play className="h-4 w-4" />}
+              icon={
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M9 10V9a2 2 0 012-2h2a2 2 0 012 2v1M9 10v5a2 2 0 002 2h2a2 2 0 002-2v-5" />
+                </svg>
+              }
             >
               AI Scan Now
             </Button>
@@ -167,7 +167,11 @@ const DuplicatesList = ({ className = '' }) => {
                 variant="outline"
                 size="small"
                 onClick={handleExport}
-                icon={<Download className="h-4 w-4" />}
+                icon={
+                  <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                  </svg>
+                }
               >
                 Export Report
               </Button>
@@ -185,13 +189,17 @@ const DuplicatesList = ({ className = '' }) => {
               variant="outline"
               size="small"
               onClick={scanDuplicates}
-              icon={<RefreshCw className="h-4 w-4" />}
+              icon={
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+              }
             >
               Refresh Analytics
             </Button>
           </div>
           
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-4 gap-4">
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="flex items-center">
                 <div className="flex-1">
@@ -226,7 +234,7 @@ const DuplicatesList = ({ className = '' }) => {
               <div className="flex items-center">
                 <div className="flex-1">
                   <p className="text-sm font-medium text-orange-600">Medium Similarity</p>
-                  <p className="text-2xl font-bold text-orange-900">{statistics.mediumSimilarity}</p>
+                  <p className="text-2xl font-bold text-orange-800">{statistics.mediumSimilarity}</p>
                   <p className="text-xs text-orange-500 mt-1">85–94% match</p>
                 </div>
                 <div className="text-orange-400">
@@ -241,7 +249,7 @@ const DuplicatesList = ({ className = '' }) => {
               <div className="flex items-center">
                 <div className="flex-1">
                   <p className="text-sm font-medium text-yellow-600">Low Similarity</p>
-                  <p className="text-2xl font-bold text-yellow-900">{statistics.lowSimilarity}</p>
+                  <p className="text-2xl font-bold text-yellow-800">{statistics.lowSimilarity}</p>
                   <p className="text-xs text-yellow-500 mt-1">Below 85% match</p>
                 </div>
                 <div className="text-yellow-400">
@@ -268,106 +276,87 @@ const DuplicatesList = ({ className = '' }) => {
                 Enhanced duplicate detection with 50% confidence threshold
               </span>
             </div>
-            <Badge variant="primary" size="small">
-              AI Enhanced
-            </Badge>
+            <span className="badge badge-primary">AI Enhanced</span>
           </div>
-        </div>
-      )}
-
-      {/* Filters and Search */}
-      {hasData && (
-        <div className="p-6 pb-0">
-          <CategoryFilter
-            categories={categories}
-            activeCategory={activeCategory}
-            onCategoryChange={setActiveCategory}
-            categoryStats={categoryStats}
-            searchTerm={searchTerm}
-            onSearchChange={setSearchTerm}
-          />
         </div>
       )}
 
       {/* Content */}
       <div className="p-6">
         {loading && !hasData ? (
-          <LoadingSpinner 
-            size="large" 
-            message="Scanning for API duplicates using AI..." 
-          />
+          <div className="flex flex-col items-center justify-center py-12">
+            <svg className="animate-spin h-12 w-12 text-blue-600 mb-4" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            <p className="text-gray-600 font-medium">Scanning for API duplicates using AI...</p>
+          </div>
         ) : hasData ? (
-          <>
-            {/* View mode toggle */}
-            <div className="flex items-center justify-between mb-6">
-              <div className="flex items-center space-x-4">
-                <div className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setViewMode('grid')}
-                    className={`p-2 rounded ${viewMode === 'grid' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
-                    </svg>
-                  </button>
-                  <button
-                    onClick={() => setViewMode('list')}
-                    className={`p-2 rounded ${viewMode === 'list' ? 'bg-blue-100 text-blue-600' : 'text-gray-400 hover:text-gray-600'}`}
-                  >
-                    <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 10h16M4 14h16M4 18h16" />
-                    </svg>
-                  </button>
+          <div className="space-y-4">
+            {/* Sample duplicate groups */}
+            {filteredData && filteredData.length > 0 ? (
+              filteredData.map((group, index) => (
+                <div key={index} className="bg-red-50 border-red-200 border rounded-lg">
+                  <div className="p-4">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center space-x-3">
+                        <svg className="h-5 w-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                        </svg>
+                        <div>
+                          <h3 className="text-lg font-semibold text-gray-900">
+                            {group.similarity_score_percentage}% Match
+                          </h3>
+                          <p className="text-sm text-gray-600">
+                            {group.pairs?.length || 0} API pair{(group.pairs?.length || 0) !== 1 ? 's' : ''} • {group.number_of_apis || (group.pairs?.length || 0) * 2} total APIs
+                          </p>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <span className={`badge ${group.similarity_score_percentage >= 95 ? 'badge-danger' : group.similarity_score_percentage >= 85 ? 'badge-medium' : 'badge-low'}`}>
+                          {group.similarity_score_percentage >= 95 ? 'HIGH' : group.similarity_score_percentage >= 85 ? 'MEDIUM' : 'LOW'} Priority
+                        </span>
+                        {group.similarity_score_percentage >= 95 && (
+                          <Button variant="outline" size="small" onClick={() => handleTakeAction(group, 'bulk_action')}>
+                            Take Action
+                          </Button>
+                        )}
+                      </div>
+                    </div>
+                  </div>
                 </div>
-
-                <div className="text-sm text-gray-600">
-                  Showing {filteredData.length} duplicate groups
-                  {lastScanTime && (
-                    <span className="ml-2">• Last scan: {lastScanTime.toLocaleTimeString()}</span>
-                  )}
-                </div>
+              ))
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-gray-500">No duplicate groups found for the selected category.</p>
               </div>
-
-              <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-500">Items per page:</span>
-                <select className="text-sm border border-gray-300 rounded px-2 py-1">
-                  <option>12</option>
-                  <option>24</option>
-                  <option>48</option>
-                </select>
-              </div>
-            </div>
-
-            {/* Duplicates list */}
-            <SimilarityGroupsList
-              groups={filteredData}
-              onViewDetails={handleViewDetails}
-              onTakeAction={handleTakeAction}
-            />
-          </>
+            )}
+          </div>
         ) : (
           <div className="text-center py-12">
-            <div className="mx-auto h-12 w-12 text-gray-400">
+            <div className="mx-auto h-12 w-12 text-gray-400 mb-4">
               <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
               </svg>
             </div>
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+            <h3 className="text-sm font-medium text-gray-900 mb-2">
               No scan performed yet
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="text-sm text-gray-500 mb-6">
               Click "AI Scan Now" to detect duplicate APIs using AI analysis.
             </p>
-            <div className="mt-6">
-              <Button
-                variant="primary"
-                onClick={scanDuplicates}
-                loading={loading}
-                icon={<Play className="h-4 w-4" />}
-              >
-                Start AI Scan
-              </Button>
-            </div>
+            <Button
+              variant="primary"
+              onClick={scanDuplicates}
+              loading={loading}
+              icon={
+                <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1.586a1 1 0 01.707.293l2.414 2.414a1 1 0 00.707.293H15M9 10V9a2 2 0 012-2h2a2 2 0 012 2v1M9 10v5a2 2 0 002 2h2a2 2 0 002-2v-5" />
+                </svg>
+              }
+            >
+              Start AI Scan
+            </Button>
           </div>
         )}
       </div>
